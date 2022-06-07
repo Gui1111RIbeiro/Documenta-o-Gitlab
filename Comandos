@@ -1,0 +1,220 @@
+-----------------------------------------------------------CRIAÇÃO DE UM GITLAB VIA DOCKER USANDO O DOCKER COMPOSE-----------------------------------------------------------
+
+## REFERÊNCIAS
+
+#Criei o Gitlab com base na documentação - link - https://docs.gitlab.com/ee/install/docker.html
+#Caso queira consultar mais informações e configurações, indico que acesse ao link acima
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## PRÉ-REQUISITOS
+
+#Ter o Vagrant instalado na máquina - link - https://www.vagrantup.com/downloads
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## 1 - ENTRAR / CRIAR A VM
+
+mkdir gitlab
+#Criar um diretório para a VM caso ainda não tenha
+
+cd gitlab/
+#Ir para o mesmo diretório que contém a VM
+
+vagrant init <box_name>
+#Cria o Arquivo Vagrantfile (Ver exemplo de configuração no final da documentação), (Ver possíveis <box_name> em - link - https://app.vagrantup.com/boxes/search)
+
+vagrant up
+#Ligar a VM
+
+vagrant ssh
+#Acessar remotamente a VM
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## 2 - INSTALAR DOCKER VIA CENTOS (Caso primeiro acesso)
+
+sudo yum remove docker \
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-engine
+#Remove o docker caso exista
+
+sudo yum install -y yum-utils
+#Instala o comando usado a seguir
+
+sudo yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
+#Configura os repositórios do docker
+
+sudo yum install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+#Instala o docker juntamente com o docker compose
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## 3 - CONFIGURAR A LOCALIZAÇÃO DOS ARQUIVOS (Caso primeiro acesso)
+
+sudo mkdir /srv/gitlab
+#Cria o diretório onde ficaram os logs/dados/configurações do container, para que seja possível guardar as alterações quando o container for apagado
+
+nano ~/.bash_profile
+#Acessar o arquivo do perfil
+
+export GITLAB_HOME=/srv/gitlab
+#Criar o caminho da variável GITLAB_HOME
+
+source ~/.bash_profile
+#Executar a os comandos do bash_profile para poder utilizar a variável GITLAB_HOME
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## 4 - SUBIR O DOCKER E O CONTEINER
+
+touch docker-compose.yml
+#Cria um arquivo onde será configurado o conteiner (Ver exemplo de configuração no final da documentação), (Atenção para criar no mesmo PATH que o docker foi instalado)
+
+systemctl start docker
+#Ligar o coker engine
+
+docker compose up -d
+#Para criar o container do gitlab via docker compose
+
+docker compose ps
+#Verificar o andamento da criação do container gitlab, aguardar até ficar healthy
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## 5 - SENHA (Caso primeiro acesso)
+
+sudo docker exec -it <gitlab_name> grep 'Password:' /etc/gitlab/initial_root_password
+#Caso a senha não tenha sido salva
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## 6 - CONFIGURAÇÃO
+
+docker exec -it <gitlab_name> /bin/bash
+#Para entrar no conteiner e poder configurá-lo caso necessário
+
+vi /etc/gitlab/gitlab.rb
+#Arquivo para fazer configurações
+
+gitlab-ctl reconfigure
+#Para reconfigurar o Gitlab caso tenha sido feita alguma alteração
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## 7 - BACKUP (Caso primeiro acesso)
+
+docker exec -t <gitlab_name> gitlab-backup create
+#Criar um backup
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## 8 - FECHAR O DOCKER E O CONTEINER
+
+docker compose down
+#Para o Docker removendo todas suas instâncias / containers
+
+docker stop $(docker ps -a -q)
+#Para todas as instâncias (Caso não use o docker compose down)
+
+docker rm $(docker ps -a -q)
+#Remove todas as instâncias (Caso não use o docker compose down)
+
+docker image rm $(docker image ls -a -q)
+#Remove todas as imagens
+
+docker volume prune
+#Para todos os volumes
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## 9 - SAIR / DESLIGAR A VM
+
+exit
+#Sair do acesso remoto da VM
+
+vagrant halt
+#Para desligar a maquina
+
+exit
+#Para sair do terminal
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+##ATENÇÃO##
+
+#Verificar se a vm ainda está executando E desligar manualmente pelo VirtualBox
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+##ARQUIVOS UTILIZADOS##
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# 1 - VAGRANT FILE
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+    config.vm.box = "centos/7"					#Nome da box que utilizou, ou seja, o <box_name>
+    config.vm.box_check_update = false				#Para não atualizar a versão da box
+    config.vm.hostname = "srvgitlab"				#Hostname utilizado pro gitlab
+    config.vm.network "private_network", ip: "192.168.56.101" 	#Usei este mas pode ser qualquer outro válido
+
+    config.vm.provider "virtualbox" do |vb|
+        vb.gui = false						#Desabilitar a interface gráfica GUI para a VM
+        vb.name = "gitlab"					#Mudar o nome da VM
+        vb.memory = "4096"					#Definir a memória usada da VM
+        vb.cpus = "2"						#Definir quantidade de cores que serão usados
+    end
+end
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# 2 - DOCKER-COMPOSE.YML
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+version: '3.6'
+services:
+  gitlab:						#Nome do gitlab, ou seja, o <gitlab_name>
+    image: 'gitlab/gitlab-ce:latest'			#Imagem do gitlab utilizada
+    restart: always					#Definir que o conteiner sempre de restart (Apagando tudo e criando de novo)
+    hostname: 'gitlab.example.com'			#Nome da URL do gitlab
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |				#Para poder realizar configurações do gitlab.rb sempre que subir o container
+        external_url 'https://gitlab.example.com'	#Configuração para definir a URL com seu protocolo (No caso o https)
+        #Adicione qualquer configuração do gitlab.rb aqui
+    ports:
+      - '8080:80'					#Usei portas mais fortes para o gitlab
+      - '8443:443'					#Usei portas mais fortes para o gitlab
+      - '2222:22'					#Usei portas mais fortes para o gitlab
+    volumes:
+      - '$GITLAB_HOME/config:/etc/gitlab'		#Define e lê onde é guardado os dados de configuração do gitlab na sua VM graçás a variável criada GITLAB_HOME
+      - '$GITLAB_HOME/logs:/var/log/gitlab'		#Define e lê onde é guardado os dados de logs do gitlab na sua VM graçás a variável criada GITLAB_HOME
+      - '$GITLAB_HOME/data:/var/opt/gitlab'		#Define e lê onde é guardado os dados de data do gitlab na sua VM graçás a variável criada GITLAB_HOME
+    shm_size: '256m'					#Define o tamanho do container
+    
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
