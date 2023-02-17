@@ -1,0 +1,19 @@
+version: '3.6'
+services:
+  gitlab:						                          #Nome do gitlab, ou seja, o <gitlab_name>
+    image: 'gitlab/gitlab-ce:latest'			    #Imagem do gitlab utilizada
+    restart: always					                  #Definir que o conteiner sempre de restart (Apagando tudo e criando de novo)
+    hostname: 'gitlab.example.com'			      #Nome da URL do gitlab
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |				        #Para poder realizar configurações do gitlab.rb sempre que subir o container
+        external_url 'https://gitlab.example.com'	#Configuração para definir a URL com seu protocolo (No caso o https)
+        #Adicione qualquer configuração do gitlab.rb aqui
+    ports:
+      - '8080:80'					  #Usei portas mais fortes para o gitlab
+      - '8443:443'					#Usei portas mais fortes para o gitlab
+      - '2222:22'					  #Usei portas mais fortes para o gitlab
+    volumes:
+      - '$GITLAB_HOME/config:/etc/gitlab'		  #Define e lê onde é guardado os dados de configuração do gitlab na sua VM graçás a variável criada GITLAB_HOME
+      - '$GITLAB_HOME/logs:/var/log/gitlab'		#Define e lê onde é guardado os dados de logs do gitlab na sua VM graçás a variável criada GITLAB_HOME
+      - '$GITLAB_HOME/data:/var/opt/gitlab'		#Define e lê onde é guardado os dados de data do gitlab na sua VM graçás a variável criada GITLAB_HOME
+    shm_size: '256m'					                #Define o tamanho do container
