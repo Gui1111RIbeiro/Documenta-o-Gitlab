@@ -24,7 +24,7 @@ This project was developed to host a privacy gitlab server in docker compose. So
 
 # 📁 Access the Project
 
-**Is found in Github: "https://github.com/Gui1111RIbeiro/Documentacao-Gitlab"**
+**Is found in Github: "https://github.com/GuiQueirozRibeiro/Documentacao-Gitlab"**
 
 # 📝 Requirements
 
