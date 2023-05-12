@@ -52,3 +52,5 @@ Este projeto foi desenvolvido para hospedar um servidor GitLab privado em um amb
 | :---: |
 
 ### Fim
+
+Para obter ajuda para começar a usar o GitLab, consulte a [documentação online](https://docs.gitlab.com/ee/install/docker.html), que oferece tutoriais, exemplos, orientação sobre a infraestrutura do docker e uma referência completa da API.
