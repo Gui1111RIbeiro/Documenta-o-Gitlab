@@ -1,55 +1,54 @@
-Gitlab Documentation
+Documentação do Gitlab
 ==========
 
 ![](https://cdn.cookielaw.org/logos/aa14a5c8-79e3-442a-8177-464ad850b19d/e46c1d0d-1f66-481f-bc06-5427671431da/253e6fee-c4c0-4b60-bc35-79cdae5dda32/gitlab-logo-100.png)
 
-# Index
+# Índice
 
-* [Index](#index)
-* [Project Status](#project-status)
-* [Project Description](#project-description)
-* [Access the Project](#-access-the-project)
-* [Requirements](#-requirements)
-* [Project Features](#-project-features)
-* [Run the Project](#-run-the-project)
-* [Authors](#-authors)
+* [Índice](#índice)
+* [Status do Projeto](#status-do-projeto)
+* [Descrição do Projeto](#descrição-do-projeto)
+* [Acesso ao Projeto](#-acesso-ao-projeto)
+* [Requisitos](#-requisitos)
+* [Funcionalidades do Projeto](#-funcionalidades-do-projeto)
+* [Executar o Projeto](#-executar-o-projeto)
+* [Autores](#-autores)
 
-# Project Status
+## Status do Projeto
 
-![Badge Success](https://img.shields.io/badge/State-Success-brightgreen?style=for-the-badge)
+![Badge Success](https://img.shields.io/badge/Status-Sucesso-brightgreen?style=for-the-badge)
 
-# Project Description
+## Descrição do Projeto
 
-This project was developed to host a privacy gitlab server in docker compose. So thinking about this, I did a documentation about all files there I use and how to configure and up the machine.
+Este projeto foi desenvolvido para hospedar um servidor GitLab privado em um ambiente Docker Compose. Pensando nisso, foi criada uma documentação sobre todos os arquivos usados e como configurar e iniciar a máquina.
 
-# 📁 Access the Project
+# 📁 Acesso ao Projeto
 
-**Is found in Github: "https://github.com/GuiQueirozRibeiro/Documentacao-Gitlab"**
+**Está disponível no Github: "https://github.com/GuiQueirozRibeiro/Documentacao-Gitlab"**
 
-# 📝 Requirements
+## Requisitos
 
-- ## Install the virtualbox in your machine
+- ## Instalar o Virtualbox em sua máquina
 
 **https://www.virtualbox.org/wiki/Downloads**
 
-- ## Install the vagrant in your machine
+- ## Instalar o Vagrant em sua máquina
 
  **https://developer.hashicorp.com/vagrant/downloads**
 
-# 🔨 Project Features
+## Funcionalidades do Projeto
 
-- `Feature 1`: create a private gitlab
-- `Feature 2`: use docker and containers to host the aplication
-- `Feature 3`: store your data
+- `Funcionalidade 1`: criar um GitLab privado
+- `Funcionalidade 2`: usar Docker e contêineres para hospedar a aplicação
+- `Funcionalidade 3`: armazenar seus dados
 
-# ▶ Run the Project
+## Executar o Projeto
 
-- `To up the machine, read the comandos file`
+- `Para iniciar a máquina, leia o arquivo de comandos`
 
-
-# 👨‍💻 Authors
+## Autores
 
 | [<img src="https://avatars.githubusercontent.com/u/70274921?s=400&u=c1688d6fcd13223bfe1093c6d16b3b6b646545fe&v=4" width=115><br><sub>Guilherme Queiroz Ribeiro</sub>](https://github.com/GuiQueirozRibeiro)
 | :---: |
 
-### End
+### Fim
