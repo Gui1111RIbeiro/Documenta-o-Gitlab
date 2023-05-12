@@ -53,3 +53,7 @@ This project was developed to host a privacy gitlab server in docker compose. So
 | :---: |
 
 ### End
+
+For help getting started with GitLab, view the
+[online documentation](https://docs.gitlab.com/ee/install/docker.html), which offers tutorials,
+samples, guidance on docker infrastructure, and a full API reference
